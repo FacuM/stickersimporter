@@ -167,7 +167,7 @@ class ServerResponseHandler extends SystemCommand
         $image = $manager->read($filePath);
 
         // resize image instance
-        $image->cover(width: 512, height: 512);
+        $image->contain(width: 512, height: 512);
 
         $newPath = "{$filePath}.webp";
 
