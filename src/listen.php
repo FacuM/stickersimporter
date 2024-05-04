@@ -14,8 +14,8 @@ require __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-$apiKey     = $_ENV['BOT_API_KEY'];
-$username   = $_ENV['BOT_USERNAME'];
+$apiKey     = $_ENV['BOT_API_KEY']  ?? '';
+$username   = $_ENV['BOT_USERNAME'] ?? '';
 
 if (!trim($apiKey) || !trim($username)) {
     echo 'Missing API key or username.';
