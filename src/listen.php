@@ -47,7 +47,7 @@ try {
         $response = $telegram->handleGetUpdates();
 
         if (!$response->isOk()) {
-            echo $response->printError();
+            $log->error( $response->printError() );
 
             return;
         }
