@@ -1,0 +1,10 @@
+version: "3.9"
+services:
+  backend:
+    build: .
+    restart: always
+    volumes:
+      - ./src:/var/www
+      - ./.env:/var/www/.env
+      - ./logs:/var/log/stickersimporter
+      - ./config/limits.ini:/usr/local/etc/php/conf.d/limits.ini:ro

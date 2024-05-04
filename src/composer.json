@@ -1,0 +1,13 @@
+{
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "longman/telegram-bot": "*",
+        "vlucas/phpdotenv": "^5.6",
+        "intervention/image": "^3.6",
+        "monolog/monolog": "^3.6"
+    },
+    "autoload": {
+        "psr-4": { "StickersImporter\\": "./" }
+    }
+}
