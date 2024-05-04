@@ -18,9 +18,9 @@ $apiKey     = $_ENV['BOT_API_KEY']  ?? '';
 $username   = $_ENV['BOT_USERNAME'] ?? '';
 
 if (!trim($apiKey) || !trim($username)) {
-    echo 'Missing API key or username.';
+    print 'Missing API key or username.' . PHP_EOL;
 
-    exit(1);
+    return 1;
 }
 
 try {
@@ -41,7 +41,7 @@ try {
     $log->pushHandler($stream);
 
     while (true) {
-        echo date('Y-m-d H:i:s') . ' - PING!' . PHP_EOL;
+        print date('Y-m-d H:i:s') . ' - PING!' . PHP_EOL;
 
         // Handle telegram getUpdates request
         $response = $telegram->handleGetUpdates();
@@ -49,7 +49,7 @@ try {
         if (!$response->isOk()) {
             $log->error( $response->printError() );
 
-            return;
+            return 1;
         }
 
         foreach ($response->getResult() as $entity) {
@@ -64,12 +64,12 @@ try {
             unset($handler);
         }
 
-        echo date('Y-m-d H:i:s') . ' - PONG! ' . count($response->getResult()) . ' updates processed.' . PHP_EOL;
+        print date('Y-m-d H:i:s') . ' - PONG! ' . count($response->getResult()) . ' updates processed.' . PHP_EOL;
 
         sleep(1);
     }
 
 } catch (Throwable $throwable) {
-    echo "{$throwable->getMessage()} in {$throwable->getFile()}:{$throwable->getLine()}" . PHP_EOL .
-         $throwable->getTraceAsString();
+    print "{$throwable->getMessage()} in {$throwable->getFile()}:{$throwable->getLine()}" . PHP_EOL .
+          $throwable->getTraceAsString();
 }
