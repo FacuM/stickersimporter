@@ -3,7 +3,7 @@ FROM php:8.3
 SHELL ["/bin/bash", "-c"]
 
 # Basic dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends coreutils git curl gnupg libcurl4-openssl-dev libxml2-dev libzip-dev nodejs npm fswebcam procps build-essential cmake usbutils docker.io libssl-dev pkg-config libpng-dev libwebp-dev libmagickwand-dev &&\
+RUN apt-get update && apt-get install -y --no-install-recommends coreutils git wget curl gnupg libcurl4-openssl-dev libxml2-dev libzip-dev nodejs npm fswebcam procps build-essential cmake usbutils docker.io libssl-dev pkg-config libpng-dev libwebp-dev libmagickwand-dev &&\
     apt-get clean &&\
     rm -rf /var/lib/apt/lists/*
 
