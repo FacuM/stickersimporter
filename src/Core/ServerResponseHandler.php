@@ -211,7 +211,15 @@ class ServerResponseHandler extends SystemCommand
 
         $this->log = $log;
 
-        $this->message  = $this->getMessage();
+        $message = $this->getMessage();
+
+        if ($message === null) {
+            $this->log->warning( __METHOD__ . ': invalid update received: ' . json_encode($update) );
+
+            throw new ClientError('Invalid message, please try again.');
+        }
+
+        $this->message = $message;
 
         $from = $this->message->getFrom();
 
