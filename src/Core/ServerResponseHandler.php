@@ -56,7 +56,12 @@ class ServerResponseHandler extends SystemCommand
         $file = Request::getFile([ 'file_id' => $fileId ]);
 
         if (!$file->isOk() || !Request::downloadFile($file->getResult())) {
-            throw new AttachmentDownloadError('Failed to download attachment, please try again later.');
+            throw new AttachmentDownloadError(
+                message:        'Failed to download attachment, please try again later.',
+                userId:         $this->userId,
+                log:            $this->log,
+                serverResponse: $file
+            );
         }
 
         $absolutePath = $this->telegram->getDownloadPath() . '/' . $file->getResult()->getFilePath();
@@ -82,7 +87,12 @@ class ServerResponseHandler extends SystemCommand
         ]);
 
         if (!$uploadStickerFileResponse->isOk()) {
-            throw new ClientError('Something went wrong.');
+            throw new ClientError(
+                message:        'Couldn\'t upload sticker file.',
+                userId:         $this->userId,
+                log:            $this->log,
+                serverResponse: $uploadStickerFileResponse
+            );
         }
 
         return $uploadStickerFileResponse->getResult()->getProperty('file_id');
@@ -117,7 +127,12 @@ class ServerResponseHandler extends SystemCommand
         ]);
 
         if (!$createNewSticketSetResponse->isOk()) {
-            throw new ClientError('Couldn\'t create sticker pack, please try again later.');
+            throw new ClientError(
+                message:        'Couldn\'t create sticker pack, please try again later.',
+                userId:         $this->userId,
+                log:            $this->log,
+                serverResponse: $createNewSticketSetResponse
+            );
         }
     }
     
@@ -137,7 +152,12 @@ class ServerResponseHandler extends SystemCommand
         ]);
 
         if (!$addStickerToSetResponse->isOk()) {
-            throw new ClientError('Couldn\'t add sticker to pack, please try again later.');
+            throw new ClientError(
+                message:        'Couldn\'t add sticker to pack, please try again later.',
+                userId:         $this->userId,
+                log:            $this->log,
+                serverResponse: $addStickerToSetResponse
+            );
         }
     }
 
@@ -288,18 +308,18 @@ class ServerResponseHandler extends SystemCommand
         try {
             return $this->handle();
         } catch (ClientError $clientError) {
+            $this->log->error("{$this->userId} request failed with client error: {$clientError->getMessage()}");
+
             return $this->replyToChat(text: $clientError->getMessage());
-
-            $this->log->error("{$this->userId} request failed with client error \"{$clientError->getMessage()}\".");
         } catch (Throwable $throwable) {
-            return $this->replyToChat(text: 'Something went wrong, please try again later.');
-
             $this->log->critical(
                 "{$this->userId} request failed with internal error \"{$throwable->getMessage()}\" in {$throwable->getFile()}:{$throwable->getLine()}" . PHP_EOL .
                 $throwable->getTraceAsString() .
                 '========== END OF TRACE ==========' . PHP_EOL .
                 'message: ' . json_encode($this->message)
             );
+
+            return $this->replyToChat(text: 'Something went wrong, please try again later.');
         }
     }
 }
