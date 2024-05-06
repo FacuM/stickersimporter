@@ -244,7 +244,7 @@ class ServerResponseHandler extends SystemCommand
         $from = $this->message->getFrom();
 
         $this->userId       = $from->getId();
-        $this->stickerSetId = $from->getUsername() . '_by_' . $this->telegram->getBotUsername();
+        $this->stickerSetId = hash('crc32', $this->userId) . '_by_' . $this->telegram->getBotUsername();
     }
 
     public function __destruct() {
